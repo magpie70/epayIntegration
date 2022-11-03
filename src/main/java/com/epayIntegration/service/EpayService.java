@@ -1,6 +1,7 @@
 package com.epayIntegration.service;
 
 
+import com.epayIntegration.dto.IinInput;
 import com.epayIntegration.dto.InputElements;
 import com.epayIntegration.dto.Output;
 import com.epayIntegration.dto.OutputBase64;
@@ -9,6 +10,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -60,27 +64,19 @@ public class EpayService {
         return outputBase64;
     }
 
-    public ResponseEntity<String> getBackLink(String iin) {
-//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/back-link");
-//        if (input.getIin() == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.accepted().body("Платеж отменен: " + iin);
+    public String getBackLink(IinInput iin) {
+
+        return "https://google.com";
     }
 
-    public ResponseEntity<String> getPostLink(String iin) {
-//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/post-link");
-//        if (input.getIin() == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.accepted().body("Платеж успешно совершен: " + iin);
+    public String getPostLink(IinInput iin) {
+
+        return "https://google.com";
     }
 
-    public ResponseEntity<String> getFailureBackLink(String iin) {
-//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/failure-back-link");
-//        if (input.getIin() == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.accepted().body("Платеж не прошел: " + iin);
+    public String getFailureBackLink(IinInput iin) {
+
+        return "https://google.com";
     }
+
 }

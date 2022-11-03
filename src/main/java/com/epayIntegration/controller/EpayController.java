@@ -1,14 +1,28 @@
 package com.epayIntegration.controller;
 
 
+import com.epayIntegration.dto.IinInput;
 import com.epayIntegration.dto.InputElements;
 import com.epayIntegration.dto.Output;
 import com.epayIntegration.service.EpayService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Map;
 
 @RestController
 //@RequestMapping("api/")
@@ -25,18 +39,26 @@ public class EpayController {
     }
 
     @GetMapping("/api/get-back-link")
-    public ResponseEntity<String> getBackLink(@RequestBody String iin) {
-        return epayService.getBackLink(iin);
+    public ResponseEntity<String> getBackLink(@RequestParam IinInput iin) {
+        HttpHeaders headers = new HttpHeaders();
+        String url = epayService.getBackLink(iin);
+        headers.setLocation(URI.create(url));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/api/get-post-link")
-    public ResponseEntity<String> getPostLink(@RequestBody String iin) {
-        return epayService.getPostLink(iin);
+    public ResponseEntity<String> getPostLink(@RequestParam IinInput iin) {
+        HttpHeaders headers = new HttpHeaders();
+        String url = epayService.getPostLink(iin);
+        headers.setLocation(URI.create(url));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/api/get-failure-back-link")
-    public ResponseEntity<String> getFailureBackLink(@RequestBody String iin) {
-        return epayService.getFailureBackLink(iin);
+    public ResponseEntity<Void> getFailureBackLink(@RequestParam IinInput iin) {
+        HttpHeaders headers = new HttpHeaders();
+        String url = epayService.getFailureBackLink(iin);
+        headers.setLocation(URI.create(url));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
-
 }
