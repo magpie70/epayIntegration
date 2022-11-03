@@ -2,7 +2,6 @@ package com.epayIntegration.controller;
 
 
 import com.epayIntegration.dto.InputElements;
-import com.epayIntegration.dto.Link;
 import com.epayIntegration.dto.Output;
 import com.epayIntegration.service.EpayService;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +25,18 @@ public class EpayController {
     }
 
     @GetMapping("/api/get-back-link")
-    public ResponseEntity<Link> getBackLink(@RequestBody InputElements input) {
-        return epayService.getBackLink(input);
+    public ResponseEntity<String> getBackLink(@RequestBody String iin) {
+        return epayService.getBackLink(iin);
     }
 
     @GetMapping("/api/get-post-link")
-    public ResponseEntity<Link> getPostLink(@RequestBody InputElements input) {
-        return epayService.getPostLink(input);
+    public ResponseEntity<String> getPostLink(@RequestBody String iin) {
+        return epayService.getPostLink(iin);
     }
 
     @GetMapping("/api/get-failure-back-link")
-    public ResponseEntity<Link> getFailureBackLink(@RequestBody InputElements input) {
-        return epayService.getFailureBackLink(input);
+    public ResponseEntity<String> getFailureBackLink(@RequestBody String iin) {
+        return epayService.getFailureBackLink(iin);
     }
 
 }

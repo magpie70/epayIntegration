@@ -1,9 +1,7 @@
 package com.epayIntegration.service;
 
 
-import com.epayIntegration.dto.DocumentInput;
 import com.epayIntegration.dto.InputElements;
-import com.epayIntegration.dto.Link;
 import com.epayIntegration.dto.Output;
 import com.epayIntegration.dto.OutputBase64;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +26,10 @@ public class EpayService {
 
     public ResponseEntity<Output> getOutput(InputElements input) {
 
-        String backLink = getBackLink(input).getBody().getLink();
-        String failureBackLink = getFailureBackLink(input).getBody().getLink();
-        String postLink = getPostLink(input).getBody().getLink();
+        String backLink = url + "api/get-back-link?iin=" + input.getIin();
+        String failureBackLink = url + "api/get-post-link?iin=" + input.getIin();
+        String postLink = url + "api/get-failure-back-link?iin=" + input.getIin();
+
         String email = input.getMail();
         String language = input.getLanguage();
 
@@ -61,27 +60,27 @@ public class EpayService {
         return outputBase64;
     }
 
-    public ResponseEntity<Link> getBackLink(InputElements input) {
-        Link link = new Link(input.getUrl() + "/" + input.getIin() + "/back-link");
-        if (input.getIin() == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.accepted().body(link);
+    public ResponseEntity<String> getBackLink(String iin) {
+//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/back-link");
+//        if (input.getIin() == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+        return ResponseEntity.accepted().body("Платеж отменен: " + iin);
     }
 
-    public ResponseEntity<Link> getPostLink(InputElements input) {
-        Link link = new Link(input.getUrl() + "/" + input.getIin() + "/post-link");
-        if (input.getIin() == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.accepted().body(link);
+    public ResponseEntity<String> getPostLink(String iin) {
+//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/post-link");
+//        if (input.getIin() == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+        return ResponseEntity.accepted().body("Платеж успешно совершен: " + iin);
     }
 
-    public ResponseEntity<Link> getFailureBackLink(InputElements input) {
-        Link link = new Link(input.getUrl() + "/" + input.getIin() + "/failure-back-link");
-        if (input.getIin() == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.accepted().body(link);
+    public ResponseEntity<String> getFailureBackLink(String iin) {
+//        OutputFailure link = new OutputFailure(input.getUrl() + "/" + iin + "/failure-back-link");
+//        if (input.getIin() == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+        return ResponseEntity.accepted().body("Платеж не прошел: " + iin);
     }
 }
