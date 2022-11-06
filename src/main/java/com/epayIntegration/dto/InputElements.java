@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class InputElements {
 
     @JsonProperty(required = true)
-    private BigDecimal amount;
+    private String amount;
     @JsonProperty(required = true)
     private String iin;
     @JsonProperty(required = true)
