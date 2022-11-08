@@ -33,7 +33,7 @@ public class EpayController {
 
 
     // api/public/back-link
-    @GetMapping("/api/get-output")
+    @PostMapping("/api/get-output")
     public ResponseEntity<Output> getOutput(@RequestBody InputElements input) {
         return epayService.getOutput(input);
     }
