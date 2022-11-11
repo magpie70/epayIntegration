@@ -1,7 +1,10 @@
 package com.epayIntegration.kkbsign;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -14,6 +17,7 @@ import java.security.PrivateKey;
 import java.security.Signature;
 
 @Component
+@Slf4j
 public class KKBSign implements Serializable {
     public String keystoretype = new String("JKS");
 
@@ -21,7 +25,7 @@ public class KKBSign implements Serializable {
 
     public boolean invert = true;
 
-    public boolean debug = false;
+    public boolean debug = true;
 
     public String debughash = new String("SHA");
 
@@ -36,11 +40,10 @@ public class KKBSign implements Serializable {
 
     public synchronized String build64(String amount, String orderId) {
         try {
-            File file = ResourceUtils.getFile(
-                    "classpath:template.xml");
-            FileInputStream fileInputStream2 = new FileInputStream(file);
-            byte[] arrayOfByte2 = new byte[fileInputStream2.available()];
-            fileInputStream2.read(arrayOfByte2);
+            Resource resource = new ClassPathResource("template.xml");
+            FileInputStream fileInputStream = new FileInputStream(resource.getFile());
+            byte[] arrayOfByte2 = new byte[fileInputStream.available()];
+            fileInputStream.read(arrayOfByte2);
             String str11 = new String(arrayOfByte2);
             str11 = replace(str11, "%order_id%", orderId);
             str11 = replace(str11, "%amount%", amount);
@@ -53,7 +56,7 @@ public class KKBSign implements Serializable {
             str11 = str11 + "<merchant_sign type=\"RSA\">" + str12 + "</merchant_sign>";
             str11 = "<document>" + str11 + "</document>";
             Base64 base64 = new Base64();
-            System.out.println(str11);
+            log.info(str11);
             byte[] arrayOfByte3 = str11.getBytes();
             return new String(base64.encode(arrayOfByte3));
         } catch (Exception exception) {
@@ -71,13 +74,12 @@ public class KKBSign implements Serializable {
             if (this.debug) {
                 MessageDigest messageDigest = MessageDigest.getInstance(this.debughash);
                 byte[] arrayOfByte = messageDigest.digest(arrayOfByte1);
-                System.out.println(this.debughash + " Hash:");
-                System.out.println(new String(base64.encode(arrayOfByte)));
+                log.info(this.debughash + " Hash:");
+                log.info(new String(base64.encode(arrayOfByte)));
             }
             KeyStore keyStore = KeyStore.getInstance(this.keystoretype);
-            File file = ResourceUtils.getFile(
-                    "classpath:" + keystorePass);
-            FileInputStream fileInputStream = new FileInputStream(file);
+            Resource resource = new ClassPathResource(keystorePass);
+            FileInputStream fileInputStream = new FileInputStream(resource.getFile());
             keyStore.load(fileInputStream, arrayOfChar2);
             Signature signature = Signature.getInstance(this.signalgorythm);
             PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, arrayOfChar1);
@@ -94,8 +96,8 @@ public class KKBSign implements Serializable {
             }
             return new String(base64.encode(arrayOfByte2));
         } catch (Exception exception) {
-            System.err.println("sign exception " + exception.toString());
-            return new String("");
+            log.info("sign exception " + exception.toString());
+            return exception.toString();
         }
     }
 

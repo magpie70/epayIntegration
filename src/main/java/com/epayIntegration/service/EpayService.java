@@ -7,6 +7,7 @@ import com.epayIntegration.dto.InputElements;
 import com.epayIntegration.dto.Output;
 import com.epayIntegration.dto.OutputBase64;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EpayService {
 
     @Value("${host}")
@@ -29,28 +31,20 @@ public class EpayService {
     public ResponseEntity<Output> getOutput(InputElements input) {
 
         String backLink = input.getUrl() + "api/get-back-link?iin=" + input.getIin();
-        String failureBackLink = input.getUrl() + "api/get-post-link?iin=" + input.getIin();
-        String postLink = input.getUrl() + "api/get-failure-back-link?iin=" + input.getIin();
+        String postLink = input.getUrl() + "api/get-post-link?iin=" + input.getIin();
+        String failureBackLink = input.getUrl() + "api/get-failure-back-link?iin=" + input.getIin();
 
         String email = input.getMail();
         String language = input.getLanguage();
 
         KKBSign kkbSign = new KKBSign();
 
-        OutputBase64 base64Content = getOutputBase64(kkbSign.build64(input.getAmount(), input.getOrderId()));
+        String base64Content = kkbSign.build64(input.getAmount(), input.getOrderId());
 
         Output mainData = new Output(base64Content, email, backLink, postLink, failureBackLink,
                 language, input.getTemplate(), input.getName(), input.getPhoneNumber());
 
         return ResponseEntity.accepted().body(mainData);
-    }
-
-
-    private OutputBase64 getOutputBase64(String inputXML) {
-        Base64 base64 = new Base64();
-        String encodedString = new String(base64.encode(inputXML.getBytes()));
-        OutputBase64 outputBase64 = new OutputBase64(encodedString);
-        return outputBase64;
     }
 
     public String getBackLink(IinInput iin) {
