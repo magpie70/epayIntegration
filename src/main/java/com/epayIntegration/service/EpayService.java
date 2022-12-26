@@ -2,16 +2,15 @@ package com.epayIntegration.service;
 
 
 import com.epayIntegration.constants.MerchantConst;
-import com.epayIntegration.dto.CheckOrder;
+import com.epayIntegration.dto.BankRequest;
+import com.epayIntegration.dto.BankResponseNew;
 import com.epayIntegration.kkbsign.KKBSign;
 import com.epayIntegration.dto.IinInput;
 import com.epayIntegration.dto.InputElements;
 import com.epayIntegration.dto.Output;
-import com.epayIntegration.dto.OutputBase64;
+import com.epayIntegration.repo.FeignClientToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class EpayService {
+
+    private final FeignClientToken feignClientToken;
+
     public ResponseEntity<Output> getOutput(InputElements input) {
 
         String backLink = input.getUrl() + "api/get-back-link?iin=" + input.getIin();
@@ -38,7 +40,12 @@ public class EpayService {
         return ResponseEntity.accepted().body(mainData);
     }
 
-    public String getCheckOrder(String checkOrder){
+    public ResponseEntity<BankResponseNew> getTokenInfo(InputElements input) {
+        BankRequest bankRequest = new BankRequest(input.getOrderId(), input.getAmount(), "");
+        return feignClientToken.getPaymentAuthToken(bankRequest);
+    }
+
+    public String getCheckOrder(String checkOrder) {
 
         KKBSign kkbSign = new KKBSign();
 

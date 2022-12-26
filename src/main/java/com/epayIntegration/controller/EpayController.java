@@ -2,6 +2,7 @@ package com.epayIntegration.controller;
 
 
 import com.epayIntegration.dto.BankResponse;
+import com.epayIntegration.dto.BankResponseNew;
 import com.epayIntegration.dto.CheckOrder;
 import com.epayIntegration.dto.IinInput;
 import com.epayIntegration.dto.InputElements;
@@ -40,6 +41,11 @@ public class EpayController {
     @PostMapping("/api/get-output")
     public ResponseEntity<Output> getOutput(@RequestBody InputElements input) {
         return epayService.getOutput(input);
+    }
+
+    @PostMapping("/api/get-token-info")
+    public ResponseEntity<BankResponseNew> getTokenInfo(@RequestBody InputElements input) {
+        return epayService.getTokenInfo(input);
     }
 
     @GetMapping("/api/get-check-order")
