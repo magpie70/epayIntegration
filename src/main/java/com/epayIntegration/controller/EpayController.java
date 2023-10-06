@@ -1,10 +1,9 @@
 package com.epayIntegration.controller;
 
 
-import com.epayIntegration.dto.IinInput;
-import com.epayIntegration.dto.InputElements;
-import com.epayIntegration.dto.Output;
+import com.epayIntegration.dto.*;
 import com.epayIntegration.service.EpayService;
+import com.epayIntegration.service.SynergyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,12 +29,33 @@ import java.util.Map;
 public class EpayController {
 
     private final EpayService epayService;
+    private final SynergyService synergyService;
 
 
     // api/public/back-link
-    @GetMapping("/api/get-output")
+    @PostMapping("/api/get-output")
     public ResponseEntity<Output> getOutput(@RequestBody InputElements input) {
         return epayService.getOutput(input);
+    }
+
+    @PostMapping("/api/get-token-info")
+    public ResponseEntity<BankResponseNew> getTokenInfo(@RequestBody InputElements input) {
+        return epayService.getTokenInfo(input);
+    }
+
+    @GetMapping("/api/get-transaction")
+    public ResponseEntity<TransactionStatus> getTransactionInfo(@RequestParam String authorization, @RequestParam String invoiceId) {
+        return epayService.getTransactionInfo(authorization, invoiceId);
+    }
+
+    @GetMapping("/api/get-transaction-charge")
+    public ResponseEntity<TransactionResponse> getTransactionCharge(@RequestParam String authorization, @RequestParam String transactionId, @RequestParam Boolean charge) {
+        return epayService.getTransactionCharge(authorization, transactionId, charge);
+    }
+
+    @GetMapping("/api/get-check-order")
+    public String getCheckOrder(@RequestParam String checkOrder) {
+        return epayService.getCheckOrder(checkOrder);
     }
 
     @GetMapping("/api/get-back-link")
@@ -46,12 +66,10 @@ public class EpayController {
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
-    @GetMapping("/api/get-post-link")
-    public ResponseEntity<String> getPostLink(@RequestParam IinInput iin) {
-        HttpHeaders headers = new HttpHeaders();
-        String url = epayService.getPostLink(iin);
-        headers.setLocation(URI.create(url));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+    @PostMapping("/api/get-post-link")
+    public String getPostLink(@RequestParam String dataUUID, @RequestBody BankResponse bankResponse) throws Exception {
+        synergyService.saveInfoToSynergy(dataUUID, bankResponse.getResponse());
+        return "0";
     }
 
     @GetMapping("/api/get-failure-back-link")
@@ -61,4 +79,5 @@ public class EpayController {
         headers.setLocation(URI.create(url));
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
+
 }

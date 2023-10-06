@@ -13,20 +13,25 @@ import java.math.BigDecimal;
 public class InputElements {
 
     @JsonProperty(required = true)
-    private BigDecimal amount;
-    @JsonProperty(required = true)
+    private String amount;
+    @JsonProperty(required = false)
     private String iin;
-    @JsonProperty(required = true)
+    @JsonProperty(required = false)
     private String mail;
     @JsonProperty(required = true)
     private String orderId;
-    @JsonProperty(required = true)
+    @JsonProperty(required = false)
     private String language;
-    @JsonProperty(required = true)
+    @JsonProperty(required = false)
     private String url;
 
     private String template;
     private String name;
     private String phoneNumber;
+
+    public InputElements(String orderId, String amount) {
+        this.orderId = orderId;
+        this.amount = amount;
+    }
 
 }
