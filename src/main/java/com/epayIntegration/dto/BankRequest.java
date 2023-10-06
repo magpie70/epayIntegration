@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class BankRequest {
 
     private String grant_type;
@@ -23,12 +22,12 @@ public class BankRequest {
     public BankRequest(String invoiceID, String amount, String postLink){
         this.grant_type = "client_credentials";
         this.scope = "webapi usermanagement email_send verification statement statistics payment";
-        this.client_id = "test";
-        this.client_secret = "yF587AV9Ms94qN2QShFzVR3vFnWkhjbAK3sG";
+        this.client_id = "KAZPATENT.KZ";
+        this.client_secret = "kH(bt1(rmuQxVDt";
         this.invoiceID = invoiceID;
         this.amount = amount;
-        this.currency = " KZT";
-        this.terminal = "67e34d63-102f-4bd1-898e-370781d0074d";
+        this.currency = "KZT";
+        this.terminal = "936cc0a6-10ad-48e2-b524-be41383cfc2e";
         this.postLink = postLink;
         this.failurePostLink = postLink;
     }

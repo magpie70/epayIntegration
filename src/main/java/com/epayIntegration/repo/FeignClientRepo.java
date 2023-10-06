@@ -21,4 +21,7 @@ public interface FeignClientRepo {
     @Headers("Content-Type: application/json")
     Response saveTableData(@RequestHeader(value = "Authorization", required = true) String authorizationHeader, @RequestBody FormData body);
 
+    @GetMapping("")
+    Response getDataExt(@RequestHeader("Authorization") String Token, URI baseUrl);
+
 }

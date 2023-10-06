@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "payment", url = "${host.token}")
+@FeignClient(value = "token", url = "${host.token}")
 public interface FeignClientToken {
 
     @RequestMapping(method = RequestMethod.POST, path = "/oauth2/token", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

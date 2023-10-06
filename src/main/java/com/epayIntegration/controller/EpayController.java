@@ -1,12 +1,7 @@
 package com.epayIntegration.controller;
 
 
-import com.epayIntegration.dto.BankResponse;
-import com.epayIntegration.dto.BankResponseNew;
-import com.epayIntegration.dto.CheckOrder;
-import com.epayIntegration.dto.IinInput;
-import com.epayIntegration.dto.InputElements;
-import com.epayIntegration.dto.Output;
+import com.epayIntegration.dto.*;
 import com.epayIntegration.service.EpayService;
 import com.epayIntegration.service.SynergyService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +41,16 @@ public class EpayController {
     @PostMapping("/api/get-token-info")
     public ResponseEntity<BankResponseNew> getTokenInfo(@RequestBody InputElements input) {
         return epayService.getTokenInfo(input);
+    }
+
+    @GetMapping("/api/get-transaction")
+    public ResponseEntity<TransactionStatus> getTransactionInfo(@RequestParam String authorization, @RequestParam String invoiceId) {
+        return epayService.getTransactionInfo(authorization, invoiceId);
+    }
+
+    @GetMapping("/api/get-transaction-charge")
+    public ResponseEntity<TransactionResponse> getTransactionCharge(@RequestParam String authorization, @RequestParam String transactionId, @RequestParam Boolean charge) {
+        return epayService.getTransactionCharge(authorization, transactionId, charge);
     }
 
     @GetMapping("/api/get-check-order")

@@ -2,13 +2,10 @@ package com.epayIntegration.service;
 
 
 import com.epayIntegration.constants.MerchantConst;
-import com.epayIntegration.dto.BankRequest;
-import com.epayIntegration.dto.BankResponseNew;
+import com.epayIntegration.dto.*;
 import com.epayIntegration.kkbsign.KKBSign;
-import com.epayIntegration.dto.IinInput;
-import com.epayIntegration.dto.InputElements;
-import com.epayIntegration.dto.Output;
 import com.epayIntegration.repo.FeignClientToken;
+import com.epayIntegration.repo.FeignClientPayment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class EpayService {
 
     private final FeignClientToken feignClientToken;
+    private final FeignClientPayment feignClientPayment;
 
     public ResponseEntity<Output> getOutput(InputElements input) {
 
@@ -43,6 +41,17 @@ public class EpayService {
     public ResponseEntity<BankResponseNew> getTokenInfo(InputElements input) {
         BankRequest bankRequest = new BankRequest(input.getOrderId(), input.getAmount(), "");
         return feignClientToken.getPaymentAuthToken(bankRequest);
+    }
+
+    public ResponseEntity<TransactionStatus> getTransactionInfo(String authorization, String invoiceId) {
+        return feignClientPayment.getTransactionInfo("Bearer " + authorization, invoiceId);
+    }
+
+    public ResponseEntity<TransactionResponse> getTransactionCharge(String authorization, String transactionId, Boolean charge) {
+        if(Boolean.TRUE.equals(charge))
+            return feignClientPayment.getTransactionCharge("Bearer " + authorization, transactionId);
+        else
+            return feignClientPayment.getTransactionRefund("Bearer " + authorization, transactionId);
     }
 
     public String getCheckOrder(String checkOrder) {

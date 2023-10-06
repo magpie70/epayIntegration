@@ -29,4 +29,9 @@ public class InputElements {
     private String name;
     private String phoneNumber;
 
+    public InputElements(String orderId, String amount) {
+        this.orderId = orderId;
+        this.amount = amount;
+    }
+
 }
